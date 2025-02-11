@@ -1,3 +1,4 @@
 [submodule "client-gateway"]
 	path = client-gateway
 	url = git@github.com:LearningMicroservices/client-gateway.git
+	branch = main
