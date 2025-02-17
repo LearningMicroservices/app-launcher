@@ -8,3 +8,6 @@
 [submodule "products-ms"]
 	path = products-ms
 	url = git@github.com:LearningMicroservices/products-ms.git
+[submodule "payments-ms"]
+	path = payments-ms
+	url = git@github.com:LearningMicroservices/payments-ms.git
