@@ -11,3 +11,6 @@
 [submodule "payments-ms"]
 	path = payments-ms
 	url = git@github.com:LearningMicroservices/payments-ms.git
+[submodule "auth-ms"]
+	path = auth-ms
+	url = git@github.com:LearningMicroservices/auth-ms.git
