@@ -66,3 +66,15 @@ services:
         - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
         - SUCCESS_URL=${SUCCESS_URL}
         - CANCEL_URL=${CANCEL_URL}
+
+  auth-ms:
+    build: ./auth-ms
+    volumes:
+      - ./auth-ms/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3000
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=${AUTH_DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
