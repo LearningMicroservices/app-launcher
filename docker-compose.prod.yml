@@ -3,48 +3,45 @@
 services:
   nats-server:
     image: nats:latest
-    ports:
-      - "8222:8222"
+
 
   client-gateway:
-    build: ./client-gateway
+    build: 
+      context: ./client-gateway
+      dockerfile: dockerfile.prod
+    image: client-gateway-prod
     ports:
-      - ${CLIENT_GATEWAY_PORT}:3000
-    volumes:
-      - ./client-gateway/src:/usr/src/app/src
-    command: npm run start:dev
+      - ${CLIENT_GATEWAY_PORT}:${CLIENT_GATEWAY_PORT}
     environment:
       - PORT=3000
       - NATS_SERVERS=nats://nats-server:4222
     
   products-ms:
-    build: ./products-ms
-    volumes:
-      - ./products-ms/src:/usr/src/app/src
-    command: npm run start:dev
+    build: 
+      context: ./products-ms
+      dockerfile: dockerfile.prod
     environment:
       - PORT=3000
       - NATS_SERVERS=nats://nats-server:4222
       - DATABASE_URL=file:./dev.db
 
   orders-ms:
-    build: ./orders-ms
-    volumes:
-      - ./orders-ms/src:/usr/src/app/src
-    command: npm run start:dev
+    build:
+      context: ./orders-ms
+      dockerfile: dockerfile.prod
+      args:
+        - ORDERS_DATABASE_URL=${ORDERS_DATABASE_URL}
+    image: orders-ms-prod
     environment:
       - PORT=3000
       - NATS_SERVERS=nats://nats-server:4222
-      - DATABASE_URL=postgresql://postgres:123456@orders-db:5432/ordersdb?schema=public
-    depends_on:
-      - orders-db
-  
+      - DATABASE_URL=${ORDERS_DATABASE_URL}
 
   payments-ms:
-      build: ./payments-ms
-      volumes:
-        - ./payments-ms/src:/usr/src/app/src
-      command: npm run start:dev
+      build: 
+        context: ./payments-ms
+        dockerfile: dockerfile.prod
+      image: payments-ms-prod
       ports:
         - ${PAYMENTS_MS_PORT}:${PAYMENTS_MS_PORT}
       environment:
@@ -56,10 +53,10 @@ services:
         - CANCEL_URL=${CANCEL_URL}
 
   auth-ms:
-    build: ./auth-ms
-    volumes:
-      - ./auth-ms/src:/usr/src/app/src
-    command: npm run start:dev
+    build:
+      context: ./auth-ms
+      dockerfile: dockerfile.prod
+    image: auth-ms-prod
     environment:
       - PORT=3000
       - NATS_SERVERS=nats://nats-server:4222
